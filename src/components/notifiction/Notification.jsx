@@ -1,10 +1,12 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable react/react-in-jsx-scope */
 import { toast, ToastContainer, Slide } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import NotificationCloseIcon from '../../assets/icons/NotifictionCloseIcon';
-import SuccessIcon from '../../assets/icons/SuccessIcon';
-import ErrorIcon from '../../assets/icons/ErrorIcon';
-import InfoIcon from '../../assets/icons/InfoIcon';
-import WarningIcon from '../../assets/icons/WaringIcon';
+import NotificationCloseIcon from '../../assets/icons/notification-close-icon';
+import SuccessIcon from '../../assets/icons/success-icon';
+import ErrorIcon from '../../assets/icons/error-icon';
+import InfoIcon from '../../assets/icons/info-icon';
+import WarningIcon from '../../assets/icons/warning-icon';
 import { DEFAULT_NOTIFICATION_DISPLAY_TIME } from '../../utils/constants';
 
 export const NOTIFICATION_TYPE_SUCCESS = 'success';
