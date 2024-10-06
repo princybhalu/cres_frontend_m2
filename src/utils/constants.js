@@ -1,1 +1,3 @@
 export const DEFAULT_NOTIFICATION_DISPLAY_TIME = 1000;
+
+export const DEBOUNCE_TIME = 1000;

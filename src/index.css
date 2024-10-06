@@ -1,3 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+    --navbar-bg: #446ca5;
+    --navbar-text: #ffffff;
+    --sidebar-hover: rgba(255, 255, 255, 0.1);
+    --sidebar-active: rgba(255, 255, 255, 0.2);
+    --take-lighter: #EEF2FF;
+}
+
+/* use like this way : -[var(--navbar-bg)] */

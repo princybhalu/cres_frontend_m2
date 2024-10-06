@@ -21,16 +21,6 @@ const Layout = ({ children }) => {
 
   return (
     <div className="flex flex-col h-screen">
-      <style>
-        {`
-        :root {
-          --navbar-bg: #446ca5;
-          --navbar-text: #ffffff;
-          --sidebar-hover: rgba(255, 255, 255, 0.1);
-          --sidebar-active: rgba(255, 255, 255, 0.2);
-        }
-      `}
-      </style>
 
       <Navbar
         isMobileMenuOpen={isMobileMenuOpen}
