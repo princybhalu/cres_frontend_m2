@@ -3,6 +3,7 @@ import Dashboard from '../pages/Dashboard';
 import Login from '../pages/Login';
 import NotFound from '../pages/NotFound';
 import AddProject from "../pages/Project/add";
+import UserList from "../pages/Project/[projectId]/members";
 // import GetProjectOverview from './pages/Project/getProjectOverview';
 // import AddUser from './pages/User/add';
 // import AddMember from './pages/members/addMember';
@@ -21,7 +22,9 @@ export const routes = [
   { path: '/', component: Dashboard, protected: true, layout: true },
   { path: '/project/add', component: AddProject, protected: true, layout: true },
   // { path: '/project/:projectId', component: GetProjectOverview, protected: true, layout: true },
-  // { path: '/project/:projectId/members', component: MembersList, protected: true, layout: true },
+  { path: '/project/:projectId/members', component: UserList, protected: true, layout: true },
+  { path: '/project/members', component: UserList, protected: true, layout: true },
+
   // { path: '/project/:projectId/members/add', component: AddMember, protected: true, layout: true },
 
   // { path: '/project/:projectId/progress', component: ProgessList, protected: true, layout: true },

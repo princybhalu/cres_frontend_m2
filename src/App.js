@@ -1,9 +1,10 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Provider } from "react-redux";
-import { store } from "./store";
+import { store , persistor } from "./store";
 import { routes } from "./routes/routes";
 import ProtectedRoute from "./routes/protectRoute";
+import { PersistGate } from 'redux-persist/integration/react';
 import Layout from "./layouts/layout"; 
 import NotificationWrapper from "./components/notifiction/Notification";
 
@@ -11,6 +12,7 @@ const App = () => {
   return (
     <>
       <Provider store={store}>
+      <PersistGate loading={<div>Loading...</div>} persistor={persistor}>
         <Router>
           <Routes>
             {routes.map((route) => (
@@ -41,6 +43,7 @@ const App = () => {
             ))}
           </Routes>
         </Router>
+        </PersistGate>
       </Provider>
       <NotificationWrapper />
     </>
