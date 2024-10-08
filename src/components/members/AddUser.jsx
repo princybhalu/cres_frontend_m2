@@ -1,8 +1,9 @@
 import * as yup from 'yup';
 import Modal from "../shared/Model";
 import DynamicForm from '../shared/DynamicForm';
+import {sendInviteToUser} from "../../services/api/user";
 
-const AddUserModal = ({ isOpen, onClose }) => {
+const AddUserModal = ({ isOpen, onClose , projectId}) => {
   const validationSchema = yup.object().shape({
     role: yup.string().required('Role is required'),
     email: yup.string().email('Invalid email').required('Email is required')
@@ -15,9 +16,11 @@ const AddUserModal = ({ isOpen, onClose }) => {
       type: 'select',
       required: true,
       options: [
-        { value: 'admin', label: 'Admin' },
-        { value: 'user', label: 'User' },
-        { value: 'manager', label: 'Manager' }
+        { value: 'officer', label: 'Officer' },
+        { value: 'dealer', label: 'Dealer' },
+        { value: 'contractor', label: 'Contractor' },
+        { value: 'worker', label: 'Worker' },
+        { value: 'architect', label: 'Architect' }
       ]
     },
     {
@@ -29,8 +32,14 @@ const AddUserModal = ({ isOpen, onClose }) => {
     }
   ];
 
-  const handleSubmit = (data) => {
+  const handleSubmit = async (data) => {
     console.log('Form submitted:', data);
+    try{
+      let res = await sendInviteToUser({...data , projectId});
+      console.log({res});
+    }catch(err){
+      console.log(err);
+    }
     onClose();
   };
 
@@ -38,7 +47,7 @@ const AddUserModal = ({ isOpen, onClose }) => {
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="Add User"
+      title="Add Progress"
       size="md"
     >
       <DynamicForm

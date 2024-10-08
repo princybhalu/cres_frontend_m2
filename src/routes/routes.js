@@ -1,10 +1,14 @@
-// import AddDirectProgess from './pages/AddDirectProgess';
 import Dashboard from '../pages/Dashboard';
 import Login from '../pages/Login';
 import NotFound from '../pages/NotFound';
 import AddProject from "../pages/Project/add";
 import UserList from "../pages/Project/[projectId]/members";
-// import GetProjectOverview from './pages/Project/getProjectOverview';
+import ProjectOverview from '../pages/Project/[projectId]';
+import ProgressList from "../pages/Project/[projectId]/progress";
+import ResourceList from "../pages/Project/[projectId]/Resource";
+import WorkPermitList from "../pages/Project/[projectId]/WorkPermit";
+import ProgressDetails from "../pages/Progress/ProgressDetails";
+
 // import AddUser from './pages/User/add';
 // import AddMember from './pages/members/addMember';
 // import MembersList from './pages/members/membersList';
@@ -18,26 +22,15 @@ import UserList from "../pages/Project/[projectId]/members";
 export const routes = [
   { path: '/login', component: Login, protected: false, layout: false },
 
-  // { path: '/noramalUser', component: NormalUserDashBoard, protected: true, layout: true },
   { path: '/', component: Dashboard, protected: true, layout: true },
   { path: '/project/add', component: AddProject, protected: true, layout: true },
-  // { path: '/project/:projectId', component: GetProjectOverview, protected: true, layout: true },
+  { path: '/project/:projectId', component: ProjectOverview, protected: true, layout: true },
   { path: '/project/:projectId/members', component: UserList, protected: true, layout: true },
-  { path: '/project/members', component: UserList, protected: true, layout: true },
+  { path: '/project/:projectId/progress', component: ProgressList, protected: true, layout: true },
+  { path: '/project/:projectId/resource', component: ResourceList, protected: true, layout: true },
+  { path: '/project/:projectId/workpermit', component: WorkPermitList, protected: true, layout: true },
 
-  // { path: '/project/:projectId/members/add', component: AddMember, protected: true, layout: true },
-
-  // { path: '/project/:projectId/progress', component: ProgessList, protected: true, layout: true },
-  // { path: '/project/:projectId/progress/add', component: AddProgess, protected: true, layout: true },
-  // { path: '/project/:projectId/view/:id', component: ViewProgress, protected: true, layout: true },
-
-  // { path: '/addProgress/', component: AddDirectProgess, protected: true, layout: true },
-
-  // { path: '/project/:projectId/task', component: TaskList, protected: true, layout: true },
-  // { path: '/project/:projectId/task/add', component: AddTask, protected: true, layout: true },
-
-  // { path: '/users', component: AddUser, protected: true, layout: true },
-  // { path: '/user/add', component: AddUser, protected: true, layout: true },
+  { path: '/project/:projectId/progress/:progressId', component: ProgressDetails, protected: true, layout: true },
 
   { path: '*', component: NotFound, protected: false, layout: false },
 ];

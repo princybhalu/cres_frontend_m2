@@ -11,8 +11,7 @@ const Navbar = ({
   isMobileMenuOpen,
 }) => {
   const user = useSelector((state) => state.user.user);
-  console.log(user);
-  
+
   return (
     <nav className="bg-[var(--navbar-bg)] text-white p-2">
       <div className="flex justify-between items-center">

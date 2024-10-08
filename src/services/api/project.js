@@ -40,7 +40,7 @@ export const getMembersOfProject = (projectId) => {
 //progrss
 export const getProgessOfProject = (projectId) => {
   return http.get({
-    url: "/progress",
+    url: "/progress?type=progress",
     config: {
       headers: {
         "x-project-id": projectId,
@@ -62,10 +62,20 @@ export const addProgessOfProject = (body, projectId) => {
   });
 };
 
-//task
-export const getTaskOfProject = (projectId) => {
+export const getOneProgessDetails = (progressId, projectId) => {
   return http.get({
-    url: "/task",
+    url: "/progress/" + progressId ,
+    config: {
+      headers: {
+        "x-project-id": projectId,
+      },
+    },
+  });
+};
+
+export const getResourceOfProject = (projectId) => {
+  return http.get({
+    url: "/progress?type=resource",
     config: {
       headers: {
         "x-project-id": projectId,
@@ -75,14 +85,15 @@ export const getTaskOfProject = (projectId) => {
   });
 };
 
-export const addTaskOfProject = (body, projectId) => {
-  return http.post({
-    url: "/task",
-    data: body,
+
+export const getWorkPermitOfProject = (projectId) => {
+  return http.get({
+    url: "/progress?type=workpermit",
     config: {
       headers: {
         "x-project-id": projectId,
       },
     },
+    messageSettings: { hideSuccessMessage: true },
   });
 };

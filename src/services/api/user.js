@@ -12,6 +12,7 @@ export const getUserByEmail = (email) =>  {
     return http.post({
       url: "/user/invite",
       data: body,
+      messageSettings : {}
     })
   }
 
@@ -26,5 +27,13 @@ export const getUserByEmail = (email) =>  {
           "x-user-id" : userId
         }
       }
+    })
+  }
+
+  // /user/get-users-by-ids
+  export const getUsersListByIds = (body) => {
+    return http.post({
+      url: "/user/get-users-by-ids",
+      data: body,
     })
   }

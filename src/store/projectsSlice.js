@@ -1,15 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  projects: [],
+  project: {},
 };
 
 const projectsSlice = createSlice({
-  name: 'projects',
+  name: 'project',
   initialState,
   reducers: {
     addProject: (state, action) => {
-      state.projects.push(action.payload); // Add the new project
+      state.project = { ...action.payload};
     },
     removeProject: (state, action) => {
       state.projects = state.projects.filter(project => project.id !== action.payload.id); // Remove the project by ID
@@ -21,7 +21,7 @@ const projectsSlice = createSlice({
 export const { addProject, removeProject } = projectsSlice.actions;
 
 // Export the selector to get project details
-export const selectProjects = (state) => state.projects.projects;
+export const selectProjects = (state) => state.project.project;
 
 // Export the reducer
 export default projectsSlice.reducer;

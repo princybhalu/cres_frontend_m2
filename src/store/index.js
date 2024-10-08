@@ -24,11 +24,15 @@ const persistConfig = {
 
 const rootReducer = {
   user: persistReducer(persistConfig, userReducer),
-  projects: persistReducer(persistConfig, projectsReducer),
+  project: persistReducer(persistConfig, projectsReducer),
 };
 
 export const store = configureStore({
   reducer: rootReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false, // Disabling serializable check for redux-persist
+    })
 });
 
 export const persistor = persistStore(store); // Create a persistor for the store

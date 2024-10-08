@@ -10,10 +10,13 @@ import { PLATFORM_USERS } from "../../../utils/enums";
 import PlusIcon from "../../../assets/icons/plus-icon";
 import AddUserModal from "../../../components/members/AddUser"
 import { useNavigate, useParams } from "react-router-dom";
-import { getMembersOfProject } from "../../../services/api/project";
+import { getProgessOfProject } from "../../../services/api/project";
+import AddProgressForm from "../../../components/progress/addProgress";
+import Modal from "../../../components/shared/Model";
+import {getUsersListByIds} from "../../../services/api/user";
 
 
-const UserList = () => {
+const ProgressList = () => {
     const { projectId } = useParams();
     const [rowData, setRowData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -24,8 +27,8 @@ const UserList = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const navigate = useNavigate();
     const project = useSelector((state) => state.project.project);
-    const [debounceSearchQuery , setDebounceSearchQuery] = useState(null); 
-
+    const [debounceSearchQuery, setDebounceSearchQuery] = useState(null);
+   
 
     // Custom delete renderer component
     const DeleteRenderer = (props) => {
@@ -79,14 +82,23 @@ const UserList = () => {
             sortable: true
         },
         {
-            headerName: 'Name',
-            valueGetter: (params) => `${params.data.firstname} ${params.data.lastname}`,
+            field: 'title',
+            headerName: 'Title',
+            sortable: true,
+            filter: true,
+            cellRenderer: (params) => {
+                return <> <a onClick={() => navigate(`/project/`+projectId + "/progress/" + params.data.id)}> {params.data.title} </a> </>;
+            }
+        },
+        {
+            field: 'description',
+            headerName: 'Description',
             sortable: true,
             filter: true
         },
         {
-            field: 'role',
-            headerName: 'Role',
+            field: 'status',
+            headerName: 'Status',
             sortable: true,
             filter: true
         },
@@ -97,24 +109,38 @@ const UserList = () => {
             filter: true
         },
         {
-            field: 'addedDate',
-            headerName: 'Added date',
+            field: 'due_date',
+            headerName: 'Due Date',
+            valueFormatter: (params) => {
+                const date = new Date(params.value);
+                return date.toLocaleDateString(); // Adjust format as needed
+            },
             sortable: true,
             filter: true
         },
         {
-            field: 'addedBy',
-            headerName: 'Added by',
+            field: 'user',
+            headerName: 'User',
+            valueGetter: (params) => `${params.data.firstname} ${params.data.lastname}`, // Assuming user has firstname and lastname
+            sortable: true,
+            filter: true
+        },
+        {
+            field: 'created_at',
+            headerName: 'Created At',
+            valueFormatter: (params) => {
+                const date = new Date(params.value);
+                return date.toLocaleString(); // Adjust format as needed
+            },
             sortable: true,
             filter: true
         },
         {
             headerName: '',
-            cellRenderer: DeleteRenderer,
+            cellRenderer: DeleteRenderer, // Assuming you have a DeleteRenderer component
             width: 70
         }
     ], []);
-
     // Grid options
     const defaultColDef = useMemo(() => ({
         resizable: true,
@@ -146,10 +172,21 @@ const UserList = () => {
 
     const onGridReady = async (params) => {
         try {
-            const { data } = await getMembersOfProject(projectId); // Replace with your API
+            const { data } = await getProgessOfProject(projectId);
             console.log({ data });
 
-            setRowData(data);
+            let userids = data?.map(({created_by}) => created_by);
+            let {data: usersData} = await  getUsersListByIds({
+                ids: userids
+            });
+            console.log({usersData});
+            
+            let newdata = data.map((com , index )=> {
+                let { firstname , lastname , email } = usersData.find(({id}) => id === com.user_id);
+                return {...com , email , firstname , lastname}
+            });
+
+            setRowData(newdata);
             // params.api.setRowData(data); // Set the row data in the grid
         } catch (error) {
             console.error('Error fetching data:', error);
@@ -160,13 +197,13 @@ const UserList = () => {
         <div className="p-6">
             {/* Breadcrumb */}
             <div className="mb-6">
-                <h1 className="text-4xl font-bold mb-4">User List</h1>
+                <h1 className="text-4xl font-bold mb-4">Progress List</h1>
                 <div className="flex text-gray-500 gap-2 text-sm mb-4">
                     <span onClick={() => navigate("/")}>Home</span>
                     <span>/</span>
                     <span onClick={() => navigate("/project/" + project.id)}>{project.name}</span>
                     <span>/</span>
-                    <span className='text-black'>User List</span>
+                    <span className='text-black'>Progress List</span>
                 </div>
             </div>
 
@@ -182,7 +219,7 @@ const UserList = () => {
                         onChange={handleSearchInput}
                     />
                 </div>
-                {user && (user.role === PLATFORM_USERS.OFFICER || user.role === PLATFORM_USERS.CONTRACTOR) && (
+                {user && (user.role === PLATFORM_USERS.WORKER || user.role === PLATFORM_USERS.CONTRACTOR) && (
                     <>
                         <button
                             className="text-[#ffffff] bg-[#446ca5] px-4 py-1 rounded mr-4 flex"
@@ -251,13 +288,18 @@ const UserList = () => {
                 <span className="text-gray-600">/Page</span>
             </div>
 
-            <AddUserModal
+            <Modal
                 isOpen={isModalOpen}
                 onClose={() => { setIsModalOpen(false) , onGridReady(); }}
-                projectId={projectId}
-            />
+                title="Add Progress"
+                size="xl"
+            >
+                <AddProgressForm onClose={() => { setIsModalOpen(false) , onGridReady()}}/>
+                 </Modal>
+
+            
         </div>
     );
 };
 
-export default UserList;
+export default ProgressList;

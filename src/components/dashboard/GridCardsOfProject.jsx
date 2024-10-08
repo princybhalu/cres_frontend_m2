@@ -14,11 +14,11 @@ const ProjectCard = ({ project, index , user }) => {
       }}
     >
       {/* Fixed width of cards */}
-      {index === 0 && user.role !== "contractor" && (
+      {/* {index === 0 && user.role !== "contractor" && (
         <div className="bg-red-400 text-white rounded p-2 mb-2 font-semibold text-md">
           {project.newCommentCount ?? 9} Notifiction
         </div>
-      )}
+      )} */}
 
       {/* Image Section */}
       {project.picture && (

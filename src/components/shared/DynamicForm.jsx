@@ -65,7 +65,7 @@ const DynamicForm = ({
         {fields.map((field) => (
           <div key={field.name} className={field.containerClassName}>
             {field.label && (
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="text-sm font-medium text-gray-700 mb-1">
                 {field.label}
                 {field.required && <span className="text-red-500 ml-1">*</span>}
               </label>

@@ -128,6 +128,8 @@ const Http = async (apiDataProps) => {
       return response.data;
     },
     (error) => {
+      console.log(error);
+      
       const { response } = error;
       return handleError(response);
     }
@@ -140,6 +142,8 @@ const Http = async (apiDataProps) => {
       return http.post(apiUrl, apiData, apiConfig);
     case 'put':
       return http.put(apiUrl, apiData, apiConfig);
+      case 'patch':
+      return http.patch(apiUrl, apiData, apiConfig);
     case 'delete':
       return http.delete(apiUrl, apiConfig);
     default:
@@ -173,6 +177,15 @@ Http.put = ({ url, data, config, messageSettings }) =>
     messageSettings: { ...defaultSettings, ...messageSettings },
     method: 'put',
   });
+
+  Http.patch = ({ url, data, config, messageSettings }) =>
+    Http({
+      url,
+      data,
+      config,
+      messageSettings: { ...defaultSettings, ...messageSettings },
+      method: 'patch',
+    });
 
 Http.delete = ({ url, config, messageSettings }) =>
   Http({
