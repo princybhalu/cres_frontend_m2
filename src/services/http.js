@@ -1,4 +1,3 @@
-import axios from 'axios';
 import {
   Notification,
   NOTIFICATION_TYPE_ERROR,
@@ -6,7 +5,6 @@ import {
   NOTIFICATION_TYPE_SUCCESS,
 } from '../components/notifiction/Notification';
 import { useNavigate } from 'react-router-dom';
-
 
 const StatusCode = {
   NoContent: 204,
@@ -33,12 +31,6 @@ const defaultSettings = {
 };
 
 const Http = async (apiDataProps) => {
-  const http = axios.create({
-    baseURL: process.env.REACT_APP_API_BASIC_URL,
-    headers,
-    withCredentials: true,
-  });
-
   const {
     url: apiUrl,
     config: apiConfig = {},
@@ -47,19 +39,19 @@ const Http = async (apiDataProps) => {
     method,
   } = apiDataProps;
 
-  const handleSuccess = (response) => {
+  const handleSuccess = (response, data) => {
     if (messageSettings && !messageSettings.hideSuccessMessage) {
       if (messageSettings.successMessage !== '') {
         Notification({
           type: NOTIFICATION_TYPE_SUCCESS,
           message: messageSettings.successMessage,
         });
-      } else if (response?.data?.meta?.message) {
+      } else if (data?.meta?.message) {
         Notification({
           type: NOTIFICATION_TYPE_SUCCESS,
-          message: response?.data?.meta?.message,
+          message: data.meta.message,
         });
-      } else if (response?.status === StatusCode.NoContent) {
+      } else if (response.status === StatusCode.NoContent) {
         Notification({
           type: NOTIFICATION_TYPE_INFO,
           message: 'Nothing Updated.',
@@ -68,19 +60,15 @@ const Http = async (apiDataProps) => {
     }
   };
 
-  const handleError = async (error) => {
-    const { status, data } = error;
+  const handleError = async (response) => {
     const navigate = useNavigate();
+    const { status } = response;
+
     if (messageSettings && !messageSettings.hideErrorMessage) {
       if (messageSettings.errorMessage !== '') {
         Notification({
           type: NOTIFICATION_TYPE_ERROR,
           message: messageSettings.errorMessage,
-        });
-      } else if (typeof data === 'string') {
-        Notification({
-          type: NOTIFICATION_TYPE_ERROR,
-          message: data,
         });
       } else {
         switch (status) {
@@ -95,8 +83,7 @@ const Http = async (apiDataProps) => {
               type: NOTIFICATION_TYPE_ERROR,
               message: 'Unauthorized Access.',
             });
-            // Navigate to home or login
-          navigate('/login'); // or navigate('/home');
+            navigate('/login');
             break;
           case StatusCode.ClientForbidden:
             Notification({
@@ -113,57 +100,50 @@ const Http = async (apiDataProps) => {
           default:
             Notification({
               type: NOTIFICATION_TYPE_ERROR,
-              message: 'Something Wrong.',
+              message: 'Something went wrong.',
             });
             break;
         }
       }
     }
-    return Promise.reject(error);
+    return Promise.reject(response);
   };
 
-  http.interceptors.request.use((request) => {
-    // set ip address
-    return request;
-  });
+  const fetchOptions = {
+    method,
+    headers: { ...headers, ...apiConfig.headers },
+    body: method !== 'get' ? JSON.stringify(apiData) : undefined,
+    ...apiConfig,
+  };
 
-  http.interceptors.response.use(
-    (response) => {
-      handleSuccess(response);
-      return response.data;
-    },
-    (error) => {
-      console.log(error);
-      
-      const { response } = error;
-      return handleError(response);
+  try {
+    const response = await fetch(`${process.env.REACT_APP_API_BASIC_URL}${apiUrl}`, fetchOptions);
+
+    if (!response.ok) {
+      await handleError(response);
+    } else {
+      const responseData = await response.json();
+      handleSuccess(response, responseData);
+      return responseData;
     }
-  );
-
-  switch (method) {
-    case 'get':
-      return http.get(apiUrl, apiConfig);
-    case 'post':
-      return http.post(apiUrl, apiData, apiConfig);
-    case 'put':
-      return http.put(apiUrl, apiData, apiConfig);
-      case 'patch':
-      return http.patch(apiUrl, apiData, apiConfig);
-    case 'delete':
-      return http.delete(apiUrl, apiConfig);
-    default:
-      return http.request(apiConfig);
+  } catch (error) {
+    console.error('Fetch error:', error);
+    Notification({
+      type: NOTIFICATION_TYPE_ERROR,
+      message: 'Network error occurred.',
+    });
+    throw error;
   }
 };
 
-Http.get = ({ url, config, messageSettings }) => {
-  return Http({
+// Helper methods for different HTTP verbs
+Http.get = ({ url, config, messageSettings }) =>
+  Http({
     url,
     config,
     messageSettings: { ...defaultSettings, ...messageSettings },
     method: 'get',
   });
-};
 
 Http.post = ({ url, data, config, messageSettings }) =>
   Http({
@@ -183,14 +163,14 @@ Http.put = ({ url, data, config, messageSettings }) =>
     method: 'put',
   });
 
-  Http.patch = ({ url, data, config, messageSettings }) =>
-    Http({
-      url,
-      data,
-      config,
-      messageSettings: { ...defaultSettings, ...messageSettings },
-      method: 'patch',
-    });
+Http.patch = ({ url, data, config, messageSettings }) =>
+  Http({
+    url,
+    data,
+    config,
+    messageSettings: { ...defaultSettings, ...messageSettings },
+    method: 'patch',
+  });
 
 Http.delete = ({ url, config, messageSettings }) =>
   Http({

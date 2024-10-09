@@ -29,7 +29,7 @@ const Layout = ({ children }) => {
 
       {/* Content area */}
       <div className="flex flex-1 overflow-hidden">
-        {window.location.pathname !== "/" && (
+        {!(window.location.pathname === "/" || window.location.pathname === "/project/add")  && (
             <>
               <LeftsideBar
                 currentScreen={currentScreen}
