@@ -117,7 +117,7 @@ const Http = async (apiDataProps) => {
   };
 
   try {
-    const response = await fetch(`${process.env.REACT_APP_API_BASIC_URL}${apiUrl}`, fetchOptions);
+    const response = await fetch(`${apiUrl}`, fetchOptions);
 
     if (!response.ok) {
       await handleError(response);
