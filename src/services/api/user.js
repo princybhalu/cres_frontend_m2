@@ -30,10 +30,20 @@ export const getUserByEmail = (email) =>  {
     })
   }
 
-  // /user/get-users-by-ids
+
   export const getUsersListByIds = (body) => {
     return http.post({
       url: "/user/get-users-by-ids",
       data: body,
     })
   }
+
+export const activateUser = (body) => {
+  console.log("body" , body);
+  
+  return http.post({
+    url: "/user/activate",
+    data:body ,
+    messageSettings : {}
+  })
+}

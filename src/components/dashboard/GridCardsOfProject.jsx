@@ -32,7 +32,7 @@ const ProjectCard = ({ project, index , user }) => {
       )}
 
       <h2 className="text-lg font-bold">{project.name}</h2>
-      <p className="text-gray-700 mt-2">{project.description}</p>
+      <p className="text-gray-700 mt-2">{`${project.description.slice(0, 100)}${project.description.length > 100 ? '...' : ''}`}</p>
       <p className="text-gray-600 mt-1 flex">
         {/* Assuming LocationgrayIcon is defined elsewhere */}
         <LocationIcon /> {project.location}

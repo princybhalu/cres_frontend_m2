@@ -7,17 +7,15 @@ import { getOneProgessDetails } from "../../services/api/project";
 import Loading from "../../components/shared/Loading";
 import { PLATFORM_USERS } from "../../utils/enums";
 import { chnageStatusOfProgress, addCommentsOfProgress } from "../../services/api/progress";
-import { getUsersListByIds } from "../../services/api/user";
-import { addImageOfProgress } from "../../services/api/progress";
+import {getUsersListByIds} from "../../services/api/user";
 import { useCookies } from 'react-cookie'
- 
+
 Modal.setAppElement('#root'); // Modal setup
 
 const ProgressDetails = () => {
     const { projectId, progressId } = useParams();
     const user1 = useSelector((state) => state.user.user);
     const user = {...user1};
-    const [cookies, setCookie, removeCookie] = useCookies(['user_id']);
     const userRole = user.role;
     const [status, setStatus] = useState("Pending");
     const [selectedImage, setSelectedImage] = useState(null); // To open image modal
@@ -29,8 +27,7 @@ const ProgressDetails = () => {
     const [loading, setLoading] = useState(true);
     const project = useSelector((state) => state.project.project);
     const navigate = useNavigate();
-    console.log('cookie', cookies.user_id);
-    
+    const [cookies, setCookie, removeCookie] = useCookies(['user_id']);
 
     // Handle status change (only for officers)
     const handleStatusChange = (e) => {
@@ -59,17 +56,17 @@ const ProgressDetails = () => {
                 comment: newComment,
                 progress_id: progressId,
             };
-            let { data } = await addCommentsOfProgress(reqbody, projectId);
-            let userids = data.comments?.map(({ user_id }) => user_id);
-            let { data: usersData } = await getUsersListByIds({
+            let {data} = await addCommentsOfProgress(reqbody, projectId);
+            let userids = data.comments?.map(({user_id}) => user_id);
+            let {data: usersData} = await  getUsersListByIds({
                 ids: userids
             });
-            console.log({ usersData });
+            console.log({usersData});
             console.log(usersData[0].firstname);
-
-            let newComments = data.comments.map((com, index) => {
-                let name = usersData.find(({ id }) => id === com.user_id)?.firstname;
-                return { ...com, userName: name }
+            
+            let newComments = data.comments.map((com , index )=> {
+                let name = usersData.find(({id}) => id === com.user_id)?.firstname;
+                return {...com , userName : name}
             });
             setComments([...newComments]); // Append new comment
             setNewComment('');
@@ -96,26 +93,24 @@ const ProgressDetails = () => {
             setProgres(data);
             setStatus(data.status);
 
-            let userids = data.comments?.map(({ user_id }) => user_id);
-            let usersData;
-            console.log({ userids });
-
-            if (userids.length > 0) {
-                let dataOfUser = await getUsersListByIds({
+            let userids = data.comments?.map(({user_id}) => user_id);
+            let usersData ;
+            if(userids){
+                let dataOfUser = await  getUsersListByIds({
                     ids: userids
                 });
                 usersData = dataOfUser.data;
 
-                console.log({ usersData });
-                console.log(usersData[0].firstname);
 
-                let newComments = data.comments?.map((com, index) => {
-                    let name = usersData.find(({ id }) => id === com.user_id)?.firstname;
-                    return { ...com, userName: name }
+                console.log({usersData});
+                console.log(usersData[0].firstname);
+                
+                let newComments = data.comments.map((com , index )=> {
+                    let name = usersData.find(({id}) => id === com.user_id)?.firstname;
+                    return {...com , userName : name}
                 });
                 setComments(newComments ?? []);
             }
-
         } catch (err) {
             console.log(err);
         } finally {
@@ -132,48 +127,15 @@ const ProgressDetails = () => {
         document.getElementById("mypic").click();
     };
 
-    const handleSelectedImage = async (e) => {
-        console.log(e.target.files);
+    const handleSelectedImage = () => {
+        try{
+     //TODO : ADD IMAGE
 
-        let urls = [];
-        try {
-            // Request Body To Pass Api
-            for (const file of e.target.files) {
-                const formData = new FormData();
-                console.log(file);
-                formData.append("file", file);
-                formData.append("upload_preset", "publish_page");
 
-                const response = await fetch(
-                    `https://api.cloudinary.com/v1_1/dqh3wljk0/image/upload`,
-                    {
-                        method: "post",
-                        body: formData,
-                    }
-                );
-                const urlData = await response.json();
-                urls.push(urlData?.url);
-            }
-            console.log(urls);
-
-        } catch (err) {
-            console.log(err);
-        }
-
-        try {
-            let req = {
-                images: urls,
-                progress_id: progressId
-            }
-            await addImageOfProgress(req);
-            console.log([...images, ...urls]);
-            
-            setImages([...images, ...urls])
-
-        } catch (err) {
+        }catch(err){
             console.log("errr");
-
-        }
+            
+        }   
     }
 
 
@@ -197,9 +159,9 @@ const ProgressDetails = () => {
                                 <span>/</span>
                                 <span onClick={() => navigate("/project/" + project.id)}>{project.name}</span>
                                 <span>/</span>
-                                <span onClick={() => navigate("/project/" + project.id + "/progress")} >Progress List</span>
+                                <span onClick={() => navigate("/project/" + project.id + "/resource")} >Resource List</span>
                                 <span>/</span>
-                                <span className='text-black' >Progress Details</span>
+                                <span className='text-black' >Resource Details</span>
                             </div>
                         </div>
 
@@ -244,6 +206,9 @@ const ProgressDetails = () => {
                         <div className='flex justify-between '>
                             <div className="text-xl font-semibold mb-4">Images</div>
                             <div>
+                                {/* <button className="bg-[var(--navbar-bg)] text-[var(--navbar-text)] rounded mr-24 p-2 "
+                                    onClick={() => console.log("done")
+                                    }> Add Images </button> */}
                                 <div style={{ position: "relative", display: "inline-block" }}>
                                     {/* SVG Camera Icon */}
                                     <div style={{ position: "relative", display: "inline-block" }}>
@@ -269,14 +234,14 @@ const ProgressDetails = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className="grid grid-cols-3 gap-4 h-[250px] overflow-x-auto">
+                        <div className="grid grid-cols-3 gap-4">
                             {images.map((image, index) => (
                                 <div key={index} className="relative">
                                     <img
                                         src={image[0] === '{' ? image.slice(1, image.length-1) : image}
                                         alt={`Progress ${index}`}
                                         onClick={() => openImageModal(image)}
-                                        className="w-full h-[250px] object-cover rounded cursor-pointer"
+                                        className="w-full h-32 object-cover rounded cursor-pointer"
                                     />
                                 </div>
                             ))}
@@ -298,7 +263,6 @@ const ProgressDetails = () => {
                                         </div>
                                     </div>
                                     <div className="p-4 bg-gray-100 rounded-lg max-w-xs">
-                                        <div className="text-xs text-gray-500 mt-1">{comment.userName}</div>
                                         <p className="text-sm text-gray-800">{comment.comment}</p>
                                         <div className="text-xs text-gray-500 mt-1">{new Date(comment.time).toLocaleTimeString()}</div>
                                     </div>

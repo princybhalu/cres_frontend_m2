@@ -13,7 +13,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { getProgessOfProject } from "../../../services/api/project";
 import AddProgressForm from "../../../components/progress/addProgress";
 import Modal from "../../../components/shared/Model";
-import {getUsersListByIds} from "../../../services/api/user";
+import { getUsersListByIds } from "../../../services/api/user";
+import DateRangePickerComp from "../../../components/shared/DateRangePicker";
 
 
 const ProgressList = () => {
@@ -23,12 +24,16 @@ const ProgressList = () => {
     const [itemsPerPage, setItemsPerPage] = useState(10);
     const [searchQuery, setSearchQuery] = useState('');
     const [searchString, setSearchString] = useState("");
-    const user = useSelector((state) => state.user.user);
+    const user1 = useSelector((state) => state.user.user);
+    const user = {...user1};
+    console.log(user);
+    
     const [isModalOpen, setIsModalOpen] = useState(false);
     const navigate = useNavigate();
     const project = useSelector((state) => state.project.project);
     const [debounceSearchQuery, setDebounceSearchQuery] = useState(null);
-   
+    const [isOpenDateRange , setIsOpenDateRange] = useState(false);
+
 
     // Custom delete renderer component
     const DeleteRenderer = (props) => {
@@ -58,17 +63,17 @@ const ProgressList = () => {
 
         setDebounceSearchQuery(
             setTimeout(() => {
-                if (objectiveSearchValue.length > 0) {
-                    setCurrentlyAppliedFilter({
-                        ...currentlyAppliedFilter,
-                        search: value,
-                    });
-                } else {
-                    setCurrentlyAppliedFilter({
-                        ...currentlyAppliedFilter,
-                        search: value,
-                    });
-                }
+                // if (objectiveSearchValue.length > 0) {
+                //     setCurrentlyAppliedFilter({
+                //         ...currentlyAppliedFilter,
+                //         search: value,
+                //     });
+                // } else {
+                //     setCurrentlyAppliedFilter({
+                //         ...currentlyAppliedFilter,
+                //         search: value,
+                //     });
+                // }
             }, DEBOUNCE_TIME)
         );
     };
@@ -87,7 +92,7 @@ const ProgressList = () => {
             sortable: true,
             filter: true,
             cellRenderer: (params) => {
-                return <> <a onClick={() => navigate(`/project/`+projectId + "/progress/" + params.data.id)}> {params.data.title} </a> </>;
+                return <> <a onClick={() => navigate(`/project/` + projectId + "/progress/" + params.data.id)}> {params.data.title} </a> </>;
             }
         },
         {
@@ -175,19 +180,20 @@ const ProgressList = () => {
             const { data } = await getProgessOfProject(projectId);
             console.log({ data });
 
-            let userids = data?.map(({created_by}) => created_by);
-            let {data: usersData} = await  getUsersListByIds({
-                ids: userids
-            });
-            console.log({usersData});
-            
-            let newdata = data.map((com , index )=> {
-                let { firstname , lastname , email } = usersData.find(({id}) => id === com.user_id);
-                return {...com , email , firstname , lastname}
-            });
+            let userids = data?.map(({ created_by }) => created_by);
+            if (userids.length > 0) {
+                let { data: usersData } = await getUsersListByIds({
+                    ids: userids
+                });
+                console.log({ usersData });
 
-            setRowData(newdata);
-            // params.api.setRowData(data); // Set the row data in the grid
+                let newdata = data.map((com, index) => {
+                    let { firstname, lastname, email } = usersData.find(({ id }) => id === com.user_id);
+                    return { ...com, email, firstname, lastname }
+                });
+
+                setRowData(newdata);
+            }
         } catch (error) {
             console.error('Error fetching data:', error);
         }
@@ -209,6 +215,7 @@ const ProgressList = () => {
 
             {/* Search and Add button */}
             <div className="flex justify-end mb-6">
+                <button onClick={() => setIsOpenDateRange(true)}> Select Date Range </button>
                 <div className="flex border border-gray-300 mx-2 px-1 ">
                     <SearchIcon style={`my-auto `} />
                     <input
@@ -290,14 +297,17 @@ const ProgressList = () => {
 
             <Modal
                 isOpen={isModalOpen}
-                onClose={() => { setIsModalOpen(false) , onGridReady(); }}
+                onClose={() => { setIsModalOpen(false), onGridReady(); }}
                 title="Add Progress"
                 size="xl"
             >
-                <AddProgressForm onClose={() => { setIsModalOpen(false) , onGridReady()}}/>
-                 </Modal>
+                <AddProgressForm onClose={() => { setIsModalOpen(false), onGridReady() }} />
+            </Modal>
 
-            
+            <Modal isOpen={isOpenDateRange} size="xl" onClose={() => setIsOpenDateRange(false)} className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+            <DateRangePickerComp />
+            </Modal>
+
         </div>
     );
 };

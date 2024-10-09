@@ -37,6 +37,8 @@ const userSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(loginUser.fulfilled, (state, action) => {
+        console.log("in log in class");
+        
         state.isLoggedIn = true;
         state.user = action.payload;
         state.error = null;

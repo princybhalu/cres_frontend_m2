@@ -10,7 +10,8 @@ const Navbar = ({
   // eslint-disable-next-line react/prop-types
   isMobileMenuOpen,
 }) => {
-  const user = useSelector((state) => state.user.user);
+  const user1 = useSelector((state) => state.user.user);
+  const user = {...user1};
 
   return (
     <nav className="bg-[var(--navbar-bg)] text-white p-2">

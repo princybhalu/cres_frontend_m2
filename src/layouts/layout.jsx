@@ -8,7 +8,8 @@ import { useSelector } from "react-redux";
 const Layout = ({ children }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [currentScreen, setCurrentScreen] = useState("dashboard");
-  const user = useSelector((state) => state.user.user);
+  const user1 = useSelector((state) => state.user.user);
+  const user = {...user1};
 
   const navigation = useNavigate();
 
@@ -28,15 +29,14 @@ const Layout = ({ children }) => {
 
       {/* Content area */}
       <div className="flex flex-1 overflow-hidden">
-        {user &&
-          //@ts-ignore
-          user.role !== "contractor" && (
+        {window.location.pathname !== "/" && (
             <>
               <LeftsideBar
                 currentScreen={currentScreen}
                 handleNavigation={handleNavigation}
                 isMobileMenuOpen={isMobileMenuOpen}
                 IsIsMobileMenuOpenFun={setIsMobileMenuOpen}
+                currentUserRole={user.role}
               />
             </>
           )}

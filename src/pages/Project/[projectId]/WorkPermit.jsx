@@ -12,7 +12,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { getWorkPermitOfProject } from "../../../services/api/project";
 import AddWorkPermitForm from "../../../components/workpermit/AddWorkPermit";
 import Modal from "../../../components/shared/Model";
-import {getUsersListByIds} from "../../../services/api/user";
+import { getUsersListByIds } from "../../../services/api/user";
 
 
 const ProgressList = () => {
@@ -22,12 +22,13 @@ const ProgressList = () => {
     const [itemsPerPage, setItemsPerPage] = useState(10);
     const [searchQuery, setSearchQuery] = useState('');
     const [searchString, setSearchString] = useState("");
-    const user = useSelector((state) => state.user.user);
+    const user1 = useSelector((state) => state.user.user);
+    const user = {...user1};
     const [isModalOpen, setIsModalOpen] = useState(false);
     const navigate = useNavigate();
     const project = useSelector((state) => state.project.project);
     const [debounceSearchQuery, setDebounceSearchQuery] = useState(null);
-   
+
 
     // Custom delete renderer component
     const DeleteRenderer = (props) => {
@@ -57,17 +58,17 @@ const ProgressList = () => {
 
         setDebounceSearchQuery(
             setTimeout(() => {
-                if (objectiveSearchValue.length > 0) {
-                    setCurrentlyAppliedFilter({
-                        ...currentlyAppliedFilter,
-                        search: value,
-                    });
-                } else {
-                    setCurrentlyAppliedFilter({
-                        ...currentlyAppliedFilter,
-                        search: value,
-                    });
-                }
+                // if (objectiveSearchValue.length > 0) {
+                //     setCurrentlyAppliedFilter({
+                //         ...currentlyAppliedFilter,
+                //         search: value,
+                //     });
+                // } else {
+                //     setCurrentlyAppliedFilter({
+                //         ...currentlyAppliedFilter,
+                //         search: value,
+                //     });
+                // }
             }, DEBOUNCE_TIME)
         );
     };
@@ -84,7 +85,10 @@ const ProgressList = () => {
             field: 'title',
             headerName: 'Title',
             sortable: true,
-            filter: true
+            filter: true,
+            cellRenderer: (params) => {
+                return <> <a onClick={() => navigate(`/project/` + projectId + "/workpermit/" + params.data.id)}> {params.data.title} </a> </>;
+            }
         },
         {
             field: 'description',
@@ -162,20 +166,20 @@ const ProgressList = () => {
             const { data } = await getWorkPermitOfProject(projectId);
             console.log({ data });
 
-            let userids = data?.map(({created_by}) => created_by);
-            let {data: usersData} = await  getUsersListByIds({
-                ids: userids
-            });
-            console.log({usersData});
-            
-            let newdata = data.map((com , index )=> {
-                let { firstname , lastname  } = usersData.find(({id}) => id === com.created_by);
-                return {...com , firstname , lastname}
-            });
+            let userids = data?.map(({ created_by }) => created_by);
+            if (userids.length > 0) {
+                let { data: usersData } = await getUsersListByIds({
+                    ids: userids
+                });
+                console.log({ usersData });
 
-            setRowData(newdata);
+                let newdata = data.map((com, index) => {
+                    let { firstname, lastname } = usersData.find(({ id }) => id === com.created_by);
+                    return { ...com, firstname, lastname }
+                });
 
-            // params.api.setRowData(data); // Set the row data in the grid
+                setRowData(newdata);
+            }
         } catch (error) {
             console.error('Error fetching data:', error);
         }
@@ -278,14 +282,14 @@ const ProgressList = () => {
 
             <Modal
                 isOpen={isModalOpen}
-                onClose={() => { setIsModalOpen(false) , onGridReady(); }}
+                onClose={() => { setIsModalOpen(false), onGridReady(); }}
                 title="Add Work Permit"
                 size="xl"
             >
-                <AddWorkPermitForm onClose={() => { setIsModalOpen(false) , onGridReady()}}/>
-                 </Modal>
+                <AddWorkPermitForm onClose={() => { setIsModalOpen(false), onGridReady() }} />
+            </Modal>
 
-            
+
         </div>
     );
 };

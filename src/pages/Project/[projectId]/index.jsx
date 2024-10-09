@@ -67,7 +67,11 @@ const NavigateCard = ({ icon, title, color, onClick }) => {
 const ProjectOverview = () => {
     const dispatch = useDispatch();
     const { projectId } = useParams();
-    const userRole = useSelector((state) => state.user.user.role);
+    const user1 = useSelector((state) => state.user.user);
+    const user = {...user1};
+    const userRole = user.role;
+    console.log({user});
+    
     const [ProjectDetails, setProjectDetails] = useState(null);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();

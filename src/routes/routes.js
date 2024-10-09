@@ -8,16 +8,8 @@ import ProgressList from "../pages/Project/[projectId]/progress";
 import ResourceList from "../pages/Project/[projectId]/Resource";
 import WorkPermitList from "../pages/Project/[projectId]/WorkPermit";
 import ProgressDetails from "../pages/Progress/ProgressDetails";
-
-// import AddUser from './pages/User/add';
-// import AddMember from './pages/members/addMember';
-// import MembersList from './pages/members/membersList';
-// import NormalUserDashBoard from './pages/normalUserDashBoard';
-// import AddProgess from './pages/progress/AddProgess';
-// import ViewProgress from './pages/progress/AddProgess copy';
-// import ProgessList from './pages/progress/ProgessList';
-// import TaskList from './pages/task/TaskList';
-// import AddTask from './pages/task/addTask';
+import ResourceDetails from "../pages/Resource/ResourceDetails";
+import Register from "../pages/Register";
 
 export const routes = [
   { path: '/login', component: Login, protected: false, layout: false },
@@ -31,6 +23,9 @@ export const routes = [
   { path: '/project/:projectId/workpermit', component: WorkPermitList, protected: true, layout: true },
 
   { path: '/project/:projectId/progress/:progressId', component: ProgressDetails, protected: true, layout: true },
+  { path: '/project/:projectId/resource/:progressId', component: ResourceDetails, protected: true, layout: true },
+  { path: '/project/:projectId/workpermit/:progressId', component: ProgressDetails, protected: true, layout: true },
 
+  { path: '/register/:token', component: Register , protected: false, layout: false },
   { path: '*', component: NotFound, protected: false, layout: false },
 ];

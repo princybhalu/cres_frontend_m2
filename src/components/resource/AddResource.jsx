@@ -29,7 +29,8 @@ const AddResourceForm = ({onClose}) => {
   const {projectId} = useParams();
   const [selectedFileNames, setSelectedFileNames] = useState([]);
   const [files, setFiles] = useState([]);
-  const user = useSelector((state) => state.user.user);
+  const user1 = useSelector((state) => state.user.user);
+  const user = {...user1};
 
   const {
     register,

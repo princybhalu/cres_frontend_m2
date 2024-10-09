@@ -11,9 +11,9 @@ import PlusIcon from "../../../assets/icons/plus-icon";
 import AddUserModal from "../../../components/members/AddUser"
 import { useNavigate, useParams } from "react-router-dom";
 import { getResourceOfProject } from "../../../services/api/project";
-import AddResourceForm from  "../../../components/resource/AddResource";
+import AddResourceForm from "../../../components/resource/AddResource";
 import Modal from "../../../components/shared/Model";
-import {getUsersListByIds} from "../../../services/api/user";
+import { getUsersListByIds } from "../../../services/api/user";
 
 
 
@@ -24,11 +24,12 @@ const ResourceList = () => {
     const [itemsPerPage, setItemsPerPage] = useState(10);
     const [searchQuery, setSearchQuery] = useState('');
     const [searchString, setSearchString] = useState("");
-    const user = useSelector((state) => state.user.user);
+    const user1 = useSelector((state) => state.user.user);
+    const user = {...user1};
     const [isModalOpen, setIsModalOpen] = useState(false);
     const navigate = useNavigate();
     const project = useSelector((state) => state.project.project);
-    const [debounceSearchQuery , setDebounceSearchQuery] = useState(null);  
+    const [debounceSearchQuery, setDebounceSearchQuery] = useState(null);
 
 
 
@@ -60,17 +61,17 @@ const ResourceList = () => {
 
         setDebounceSearchQuery(
             setTimeout(() => {
-                if (objectiveSearchValue.length > 0) {
-                    setCurrentlyAppliedFilter({
-                        ...currentlyAppliedFilter,
-                        search: value,
-                    });
-                } else {
-                    setCurrentlyAppliedFilter({
-                        ...currentlyAppliedFilter,
-                        search: value,
-                    });
-                }
+                // if (objectiveSearchValue.length > 0) {
+                //     setCurrentlyAppliedFilter({
+                //         ...currentlyAppliedFilter,
+                //         search: value,
+                //     });
+                // } else {
+                //     setCurrentlyAppliedFilter({
+                //         ...currentlyAppliedFilter,
+                //         search: value,
+                //     });
+                // }
             }, DEBOUNCE_TIME)
         );
     };
@@ -87,7 +88,10 @@ const ResourceList = () => {
             field: 'title',
             headerName: 'Title',
             sortable: true,
-            filter: true
+            filter: true,
+            cellRenderer: (params) => {
+                return <> <a onClick={() => navigate(`/project/` + projectId + "/resource/" + params.data.id)}> {params.data.title} </a> </>;
+            }
         },
         {
             field: 'description',
@@ -164,19 +168,20 @@ const ResourceList = () => {
             const { data } = await getResourceOfProject(projectId);
             console.log({ data });
 
-            let userids = data?.map(({created_by}) => created_by);
-            let {data: usersData} = await  getUsersListByIds({
-                ids: userids
-            });
-            console.log({usersData});
-            
-            let newdata = data.map((com , index )=> {
-                let { firstname , lastname  } = usersData.find(({id}) => id === com.created_by);
-                return {...com , firstname , lastname}
-            });
+            let userids = data?.map(({ created_by }) => created_by);
+            if (userids.length > 0) {
+                let { data: usersData } = await getUsersListByIds({
+                    ids: userids
+                });
+                console.log({ usersData });
 
-            setRowData(newdata);
-            // params.api.setRowData(data); // Set the row data in the grid
+                let newdata = data.map((com, index) => {
+                    let { firstname, lastname } = usersData.find(({ id }) => id === com.created_by);
+                    return { ...com, firstname, lastname }
+                });
+
+                setRowData(newdata);
+            }
         } catch (error) {
             console.error('Error fetching data:', error);
         }
@@ -208,7 +213,7 @@ const ResourceList = () => {
                         onChange={handleSearchInput}
                     />
                 </div>
-                {user && (user.role === PLATFORM_USERS.WORKER || user.role === PLATFORM_USERS.CONTRACTOR ) && (
+                {user && (user.role === PLATFORM_USERS.ARCHITECT) && (
                     <>
                         <button
                             className="text-[#ffffff] bg-[#446ca5] px-4 py-1 rounded mr-4 flex"
@@ -279,12 +284,12 @@ const ResourceList = () => {
 
             <Modal
                 isOpen={isModalOpen}
-                onClose={() => { setIsModalOpen(false) , onGridReady(); }}
+                onClose={() => { setIsModalOpen(false), onGridReady(); }}
                 title="Add Resource"
                 size="xl"
             >
-                <AddResourceForm onClose={() => { setIsModalOpen(false) , onGridReady()}}/>
-                 </Modal>
+                <AddResourceForm onClose={() => { setIsModalOpen(false), onGridReady() }} />
+            </Modal>
         </div>
     );
 };

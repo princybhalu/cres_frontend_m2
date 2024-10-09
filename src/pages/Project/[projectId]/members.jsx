@@ -12,7 +12,6 @@ import AddUserModal from "../../../components/members/AddUser"
 import { useNavigate, useParams } from "react-router-dom";
 import { getMembersOfProject } from "../../../services/api/project";
 
-
 const UserList = () => {
     const { projectId } = useParams();
     const [rowData, setRowData] = useState([]);
@@ -20,7 +19,8 @@ const UserList = () => {
     const [itemsPerPage, setItemsPerPage] = useState(10);
     const [searchQuery, setSearchQuery] = useState('');
     const [searchString, setSearchString] = useState("");
-    const user = useSelector((state) => state.user.user);
+    const user1 = useSelector((state) => state.user.user);
+    const user = {...user1};
     const [isModalOpen, setIsModalOpen] = useState(false);
     const navigate = useNavigate();
     const project = useSelector((state) => state.project.project);
@@ -55,17 +55,17 @@ const UserList = () => {
 
         setDebounceSearchQuery(
             setTimeout(() => {
-                if (objectiveSearchValue.length > 0) {
-                    setCurrentlyAppliedFilter({
-                        ...currentlyAppliedFilter,
-                        search: value,
-                    });
-                } else {
-                    setCurrentlyAppliedFilter({
-                        ...currentlyAppliedFilter,
-                        search: value,
-                    });
-                }
+                // if (objectiveSearchValue.length > 0) {
+                //     setCurrentlyAppliedFilter({
+                //         ...currentlyAppliedFilter,
+                //         search: value,
+                //     });
+                // } else {
+                //     setCurrentlyAppliedFilter({
+                //         ...currentlyAppliedFilter,
+                //         search: value,
+                //     });
+                // }
             }, DEBOUNCE_TIME)
         );
     };
@@ -97,17 +97,17 @@ const UserList = () => {
             filter: true
         },
         {
-            field: 'addedDate',
+            field: 'created_at',
             headerName: 'Added date',
             sortable: true,
             filter: true
         },
-        {
-            field: 'addedBy',
-            headerName: 'Added by',
-            sortable: true,
-            filter: true
-        },
+        // {
+        //     field: 'addedBy',
+        //     headerName: 'Added by',
+        //     sortable: true,
+        //     filter: true
+        // },
         {
             headerName: '',
             cellRenderer: DeleteRenderer,
@@ -149,6 +149,23 @@ const UserList = () => {
             const { data } = await getMembersOfProject(projectId); // Replace with your API
             console.log({ data });
 
+            // let userids = data?.map(({created_by}) => created_by ?? "--");
+            // userids.splice(0 ,1)
+            // let {data: usersData} = await  getUsersListByIds({
+            //     ids: userids
+            // });
+            // console.log({usersData});
+            
+            // let newdata = data.map((com , index )=> {
+            //     console.log("usersData.find(({id}) => id === com.created_by) : " , usersData.find(({id}) => id === com.created_by));
+                
+            //     let { firstname = "" , lastname =""  } = usersData.find(({id}) => id === com.created_by);
+            //     return {...com , addedBy : firstname + " " + lastname}
+            // });
+
+            setRowData(data);
+
+
             setRowData(data);
             // params.api.setRowData(data); // Set the row data in the grid
         } catch (error) {
@@ -172,6 +189,7 @@ const UserList = () => {
 
             {/* Search and Add button */}
             <div className="flex justify-end mb-6">
+                <button onClick={() => opne}> Select Date Range </button>
                 <div className="flex border border-gray-300 mx-2 px-1 ">
                     <SearchIcon style={`my-auto `} />
                     <input
@@ -256,6 +274,8 @@ const UserList = () => {
                 onClose={() => { setIsModalOpen(false) , onGridReady(); }}
                 projectId={projectId}
             />
+
+            
         </div>
     );
 };

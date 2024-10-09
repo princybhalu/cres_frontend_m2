@@ -25,3 +25,11 @@ export const addCommentsOfProgress = (body , projectId) => {
       },
   });
 };
+
+export const addImageOfProgress = (body ) => {
+  return http.post({
+    url: "/progress/image",
+    data: body ,
+    messageSettings: {},
+  });
+}

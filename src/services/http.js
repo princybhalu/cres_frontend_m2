@@ -5,6 +5,8 @@ import {
   NOTIFICATION_TYPE_INFO,
   NOTIFICATION_TYPE_SUCCESS,
 } from '../components/notifiction/Notification';
+import { useNavigate } from 'react-router-dom';
+
 
 const StatusCode = {
   NoContent: 204,
@@ -68,6 +70,7 @@ const Http = async (apiDataProps) => {
 
   const handleError = async (error) => {
     const { status, data } = error;
+    const navigate = useNavigate();
     if (messageSettings && !messageSettings.hideErrorMessage) {
       if (messageSettings.errorMessage !== '') {
         Notification({
@@ -92,6 +95,8 @@ const Http = async (apiDataProps) => {
               type: NOTIFICATION_TYPE_ERROR,
               message: 'Unauthorized Access.',
             });
+            // Navigate to home or login
+          navigate('/login'); // or navigate('/home');
             break;
           case StatusCode.ClientForbidden:
             Notification({

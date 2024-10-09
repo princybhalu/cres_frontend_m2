@@ -17,7 +17,8 @@ const ProjectList = () => {
   });
   const [ProjectDetails, setProjectDetails] = useState(null);
   const navigate = useNavigate();
-  const user = useSelector((state) => state.user.user);
+  const user1 = useSelector((state) => state.user.user);
+  const user = {...user1};
 
   /**
    * @method handleSearchInput
