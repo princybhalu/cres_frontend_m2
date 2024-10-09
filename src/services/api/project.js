@@ -52,7 +52,7 @@ export const getProgessOfProject = (projectId) => {
 
 export const addProgessOfProject = (body, projectId) => {
   return http.post({
-    url: "/progress",
+    url: "progress",
     data: body,
     config: {
       headers: {
@@ -64,7 +64,7 @@ export const addProgessOfProject = (body, projectId) => {
 
 export const getOneProgessDetails = (progressId, projectId) => {
   return http.get({
-    url: "/progress/" + progressId ,
+    url: "progress/" + progressId ,
     config: {
       headers: {
         "x-project-id": projectId,
@@ -75,7 +75,7 @@ export const getOneProgessDetails = (progressId, projectId) => {
 
 export const getResourceOfProject = (projectId) => {
   return http.get({
-    url: "/progress?type=resource",
+    url: "progress?type=resource",
     config: {
       headers: {
         "x-project-id": projectId,
@@ -88,7 +88,7 @@ export const getResourceOfProject = (projectId) => {
 
 export const getWorkPermitOfProject = (projectId) => {
   return http.get({
-    url: "/progress?type=workpermit",
+    url: "progress?type=workpermit",
     config: {
       headers: {
         "x-project-id": projectId,
