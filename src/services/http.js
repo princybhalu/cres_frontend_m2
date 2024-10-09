@@ -113,6 +113,7 @@ const Http = async (apiDataProps) => {
     headers: { ...headers, ...apiConfig.headers },
     body: method !== 'get' ? JSON.stringify(apiData) : undefined,
     ...apiConfig,
+    credentials: 'include'
   };
 
   try {

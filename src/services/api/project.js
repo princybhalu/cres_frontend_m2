@@ -4,14 +4,14 @@ export const getProjectListForDashboard = (filterData) => {
   // TODO : create formate to pass filter data
   console.log({ filterData });
   return http.get({
-    url: "https://34.196.219.106:4000/project",
+    url: "http://34.196.219.106:4000/project",
     messageSettings: { hideSuccessMessage: true },
   });
 };
 
 export const addProjectApiCall = (body) => {
   return http.post({
-    url: "https://34.196.219.106:4000/project",
+    url: "http://34.196.219.106:4000/project",
     data: body,
     messageSettings: { successMessage: "Added Sccessfully" },
   });
@@ -19,7 +19,7 @@ export const addProjectApiCall = (body) => {
 
 export const getOneProjectData = (projectId) => {
   return http.get({
-    url: "https://34.196.219.106:4000/project/" + projectId,
+    url: "http://34.196.219.106:4000/project/" + projectId,
     messageSettings: { hideSuccessMessage: true },
   });
 };
@@ -27,7 +27,7 @@ export const getOneProjectData = (projectId) => {
 // memebers
 export const getMembersOfProject = (projectId) => {
   return http.get({
-    url: "https://34.196.219.106:4000/project/members",
+    url: "http://34.196.219.106:4000/project/members",
     config: {
       headers: {
         "x-project-id": projectId,
@@ -40,7 +40,7 @@ export const getMembersOfProject = (projectId) => {
 //progrss
 export const getProgessOfProject = (projectId) => {
   return http.get({
-    url: "https://34.196.219.106:4000/progress?type=progress",
+    url: "http://34.196.219.106:4000/progress?type=progress",
     config: {
       headers: {
         "x-project-id": projectId,
@@ -52,7 +52,7 @@ export const getProgessOfProject = (projectId) => {
 
 export const addProgessOfProject = (body, projectId) => {
   return http.post({
-    url: "https://34.196.219.106:4000/progress",
+    url: "http://34.196.219.106:4000/progress",
     data: body,
     config: {
       headers: {
@@ -64,7 +64,7 @@ export const addProgessOfProject = (body, projectId) => {
 
 export const getOneProgessDetails = (progressId, projectId) => {
   return http.get({
-    url: "https://34.196.219.106:4000/progress/" + progressId ,
+    url: "http://34.196.219.106:4000/progress/" + progressId ,
     config: {
       headers: {
         "x-project-id": projectId,
@@ -75,7 +75,7 @@ export const getOneProgessDetails = (progressId, projectId) => {
 
 export const getResourceOfProject = (projectId) => {
   return http.get({
-    url: "https://34.196.219.106:4000/progress?type=resource",
+    url: "http://34.196.219.106:4000/progress?type=resource",
     config: {
       headers: {
         "x-project-id": projectId,
@@ -88,7 +88,7 @@ export const getResourceOfProject = (projectId) => {
 
 export const getWorkPermitOfProject = (projectId) => {
   return http.get({
-    url: "https://34.196.219.106:4000progress?type=workpermit",
+    url: "http://34.196.219.106:4000progress?type=workpermit",
     config: {
       headers: {
         "x-project-id": projectId,
