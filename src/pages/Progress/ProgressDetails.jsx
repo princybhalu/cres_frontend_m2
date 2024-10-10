@@ -251,7 +251,7 @@ const ProgressDetails = () => {
                                         <input
                                             type="file"
                                             id="mypic"
-                                            accept="image/*"
+                                            accept="image/*;capture=camera"
                                             onChange={handleSelectedImage}
                                             style={{ display: "none" }} // Hide the input field
                                         />

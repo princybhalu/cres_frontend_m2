@@ -9,6 +9,7 @@ import { PLATFORM_USERS } from "../../utils/enums";
 import { chnageStatusOfProgress, addCommentsOfProgress } from "../../services/api/progress";
 import { getUsersListByIds } from "../../services/api/user";
 import { useCookies } from 'react-cookie'
+import { addImageOfProgress } from "../../services/api/progress";
 
 Modal.setAppElement('#root'); // Modal setup
 
@@ -125,10 +126,43 @@ const ProgressDetails = () => {
         document.getElementById("mypic").click();
     };
 
-    const handleSelectedImage = () => {
-        try {
-            //TODO : ADD IMAGE
+    const handleSelectedImage = async (e) => {
+        console.log(e.target.files);
 
+        let urls = [];
+        try {
+            // Request Body To Pass Api
+            for (const file of e.target.files) {
+                const formData = new FormData();
+                console.log(file);
+                formData.append("file", file);
+                formData.append("upload_preset", "publish_page");
+
+                const response = await fetch(
+                    `https://api.cloudinary.com/v1_1/dqh3wljk0/image/upload`,
+                    {
+                        method: "post",
+                        body: formData,
+                    }
+                );
+                const urlData = await response.json();
+                urls.push(urlData?.url);
+            }
+            console.log(urls);
+
+        } catch (err) {
+            console.log(err);
+        }
+
+        try {
+            let req = {
+                images: urls,
+                progress_id: progressId
+            }
+            await addImageOfProgress(req);
+            console.log([...images, ...urls]);
+            
+            setImages([...images, ...urls])
 
         } catch (err) {
             console.log("errr");
@@ -214,7 +248,7 @@ const ProgressDetails = () => {
                                         <input
                                             type="file"
                                             id="mypic"
-                                            accept="image/*"
+                                            accept="image/*;capture=camera"
                                             onChange={handleSelectedImage}
                                             style={{ display: "none" }} // Hide the input field
                                         />

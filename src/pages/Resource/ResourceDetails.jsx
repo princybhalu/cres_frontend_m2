@@ -7,15 +7,16 @@ import { getOneProgessDetails } from "../../services/api/project";
 import Loading from "../../components/shared/Loading";
 import { PLATFORM_USERS } from "../../utils/enums";
 import { chnageStatusOfProgress, addCommentsOfProgress } from "../../services/api/progress";
-import {getUsersListByIds} from "../../services/api/user";
+import { getUsersListByIds } from "../../services/api/user";
 import { useCookies } from 'react-cookie'
+import { addImageOfProgress } from "../../services/api/progress";
 
 Modal.setAppElement('#root'); // Modal setup
 
 const ProgressDetails = () => {
     const { projectId, progressId } = useParams();
     const user1 = useSelector((state) => state.user.user);
-    const user = {...user1};
+    const user = { ...user1 };
     const userRole = user.role;
     const [status, setStatus] = useState("Pending");
     const [selectedImage, setSelectedImage] = useState(null); // To open image modal
@@ -56,17 +57,17 @@ const ProgressDetails = () => {
                 comment: newComment,
                 progress_id: progressId,
             };
-            let {data} = await addCommentsOfProgress(reqbody, projectId);
-            let userids = data.comments?.map(({user_id}) => user_id);
-            let {data: usersData} = await  getUsersListByIds({
+            let { data } = await addCommentsOfProgress(reqbody, projectId);
+            let userids = data.comments?.map(({ user_id }) => user_id);
+            let { data: usersData } = await getUsersListByIds({
                 ids: userids
             });
-            console.log({usersData});
+            console.log({ usersData });
             console.log(usersData[0].firstname);
-            
-            let newComments = data.comments.map((com , index )=> {
-                let name = usersData.find(({id}) => id === com.user_id)?.firstname;
-                return {...com , userName : name}
+
+            let newComments = data.comments.map((com, index) => {
+                let name = usersData.find(({ id }) => id === com.user_id)?.firstname;
+                return { ...com, userName: name }
             });
             setComments([...newComments]); // Append new comment
             setNewComment('');
@@ -77,7 +78,7 @@ const ProgressDetails = () => {
 
     // Open image in modal
     const openImageModal = (imageUrl) => {
-        setSelectedImage(imageUrl[0] === '{' ? imageUrl.slice(1, imageUrl.length-1) : imageUrl);
+        setSelectedImage(imageUrl[0] === '{' ? imageUrl.slice(1, imageUrl.length - 1) : imageUrl);
     };
 
     // Close image modal
@@ -93,21 +94,21 @@ const ProgressDetails = () => {
             setProgres(data);
             setStatus(data.status);
 
-            let userids = data.comments?.map(({user_id}) => user_id);
-            let usersData ;
-            if(userids){
-                let dataOfUser = await  getUsersListByIds({
+            let userids = data.comments?.map(({ user_id }) => user_id);
+            let usersData;
+            if (userids.length > 0) {
+                let dataOfUser = await getUsersListByIds({
                     ids: userids
                 });
                 usersData = dataOfUser.data;
 
 
-                console.log({usersData});
+                console.log({ usersData });
                 console.log(usersData[0].firstname);
-                
-                let newComments = data.comments.map((com , index )=> {
-                    let name = usersData.find(({id}) => id === com.user_id)?.firstname;
-                    return {...com , userName : name}
+
+                let newComments = data.comments.map((com, index) => {
+                    let name = usersData.find(({ id }) => id === com.user_id)?.firstname;
+                    return { ...com, userName: name }
                 });
                 setComments(newComments ?? []);
             }
@@ -127,15 +128,48 @@ const ProgressDetails = () => {
         document.getElementById("mypic").click();
     };
 
-    const handleSelectedImage = () => {
-        try{
-     //TODO : ADD IMAGE
+    const handleSelectedImage = async (e) => {
+        console.log(e.target.files);
 
+        let urls = [];
+        try {
+            // Request Body To Pass Api
+            for (const file of e.target.files) {
+                const formData = new FormData();
+                console.log(file);
+                formData.append("file", file);
+                formData.append("upload_preset", "publish_page");
 
-        }catch(err){
-            console.log("errr");
+                const response = await fetch(
+                    `https://api.cloudinary.com/v1_1/dqh3wljk0/image/upload`,
+                    {
+                        method: "post",
+                        body: formData,
+                    }
+                );
+                const urlData = await response.json();
+                urls.push(urlData?.url);
+            }
+            console.log(urls);
+
+        } catch (err) {
+            console.log(err);
+        }
+
+        try {
+            let req = {
+                images: urls,
+                progress_id: progressId
+            }
+            await addImageOfProgress(req);
+            console.log([...images, ...urls]);
             
-        }   
+            setImages([...images, ...urls])
+
+        } catch (err) {
+            console.log("errr");
+
+        }
     }
 
 
@@ -216,7 +250,7 @@ const ProgressDetails = () => {
                                         <input
                                             type="file"
                                             id="mypic"
-                                            accept="image/*"
+                                            accept="image/*;capture=camera"
                                             onChange={handleSelectedImage}
                                             style={{ display: "none" }} // Hide the input field
                                         />
@@ -238,7 +272,7 @@ const ProgressDetails = () => {
                             {images.map((image, index) => (
                                 <div key={index} className="relative">
                                     <img
-                                        src={image[0] === '{' ? image.slice(1, image.length-1) : image}
+                                        src={image[0] === '{' ? image.slice(1, image.length - 1) : image}
                                         alt={`Progress ${index}`}
                                         onClick={() => openImageModal(image)}
                                         className="w-full h-32 object-cover rounded cursor-pointer"
@@ -263,6 +297,7 @@ const ProgressDetails = () => {
                                         </div>
                                     </div>
                                     <div className="p-4 bg-gray-100 rounded-lg max-w-xs">
+                                        <div className="text-xs text-gray-500 mt-1">{comment.userName}</div>
                                         <p className="text-sm text-gray-800">{comment.comment}</p>
                                         <div className="text-xs text-gray-500 mt-1">{new Date(comment.time).toLocaleTimeString()}</div>
                                     </div>

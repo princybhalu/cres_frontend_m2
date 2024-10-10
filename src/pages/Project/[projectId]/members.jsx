@@ -85,7 +85,7 @@ const UserList = () => {
         },
         {
             headerName: 'Name',
-            valueGetter: (params) => `${params.data.firstname} ${params.data.lastname}`,
+            valueGetter: (params) => `${params.data.firstname ?? "-"} ${params.data.lastname ?? "-"}`,
             sortable: true,
             filter: true
         },
@@ -168,7 +168,7 @@ const UserList = () => {
             //     return {...com , addedBy : firstname + " " + lastname}
             // });
 
-            setRowData(data);
+            // setRowData(data);
 
 
             setRowData(data);
