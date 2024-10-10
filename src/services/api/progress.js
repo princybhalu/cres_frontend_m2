@@ -8,6 +8,7 @@ export const chnageStatusOfProgress = (body , projectId) => {
     config: {
         headers: {
           "x-project-id": projectId,
+          'Content-Type': 'application/json; charset=utf-8',
         },
       },
   });
@@ -21,6 +22,7 @@ export const addCommentsOfProgress = (body , projectId) => {
     config: {
         headers: {
           "x-project-id": projectId,
+          'Content-Type': 'application/json; charset=utf-8',
         },
       },
   });
@@ -30,6 +32,11 @@ export const addImageOfProgress = (body ) => {
   return http.post({
     url: "http://34.196.219.106:4000/progress/image",
     data: body ,
+    config:{
+      headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+        },
+    },
     messageSettings: {},
   });
 }

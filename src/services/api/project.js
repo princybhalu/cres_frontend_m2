@@ -13,6 +13,11 @@ export const addProjectApiCall = (body) => {
   return http.post({
     url: "http://34.196.219.106:4000/project",
     data: body,
+    config: {
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+      },
+    },
     messageSettings: { successMessage: "Added Sccessfully" },
   });
 };
@@ -31,6 +36,7 @@ export const getMembersOfProject = (projectId) => {
     config: {
       headers: {
         "x-project-id": projectId,
+        'Content-Type': 'application/json; charset=utf-8',
       },
     },
     messageSettings: { hideSuccessMessage: true },
@@ -44,6 +50,7 @@ export const getProgessOfProject = (projectId) => {
     config: {
       headers: {
         "x-project-id": projectId,
+        'Content-Type': 'application/json; charset=utf-8',
       },
     },
     messageSettings: { hideSuccessMessage: true },
@@ -57,6 +64,7 @@ export const addProgessOfProject = (body, projectId) => {
     config: {
       headers: {
         "x-project-id": projectId,
+        'Content-Type': 'application/json; charset=utf-8',
       },
     },
   });
@@ -68,6 +76,7 @@ export const getOneProgessDetails = (progressId, projectId) => {
     config: {
       headers: {
         "x-project-id": projectId,
+        'Content-Type': 'application/json; charset=utf-8',
       },
     },
   });
@@ -79,6 +88,7 @@ export const getResourceOfProject = (projectId) => {
     config: {
       headers: {
         "x-project-id": projectId,
+        'Content-Type': 'application/json; charset=utf-8',
       },
     },
     messageSettings: { hideSuccessMessage: true },
@@ -88,10 +98,11 @@ export const getResourceOfProject = (projectId) => {
 
 export const getWorkPermitOfProject = (projectId) => {
   return http.get({
-    url: "http://34.196.219.106:4000progress?type=workpermit",
+    url: "http://34.196.219.106:4000/progress?type=workpermit",
     config: {
       headers: {
         "x-project-id": projectId,
+        'Content-Type': 'application/json; charset=utf-8',
       },
     },
     messageSettings: { hideSuccessMessage: true },

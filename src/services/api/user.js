@@ -11,6 +11,11 @@ export const getUserByEmail = (email) =>  {
   export const sendInviteToUser = (body) => {
     return http.post({
       url: "http://34.196.219.106:4000/user/invite",
+      config: {
+        headers:{
+          'Content-Type': 'application/json; charset=utf-8'
+        }
+      },
       data: body,
       messageSettings : {}
     })
@@ -24,7 +29,8 @@ export const getUserByEmail = (email) =>  {
       config: {
         headers:{
           "x-project-id" : projectId,
-          "x-user-id" : userId
+          "x-user-id" : userId,
+          'Content-Type': 'application/json; charset=utf-8'
         }
       }
     })
@@ -34,6 +40,9 @@ export const getUserByEmail = (email) =>  {
   export const getUsersListByIds = (body) => {
     return http.post({
       url: "http://34.196.219.106:4000/user/get-users-by-ids",
+      config:{ headers:{
+        'Content-Type': 'application/json; charset=utf-8'
+      }},
       data: body,
     })
   }
@@ -43,6 +52,9 @@ export const activateUser = (body) => {
   
   return http.post({
     url: "http://34.196.219.106:4000/user/activate",
+    config:{ headers:{
+      'Content-Type': 'application/json; charset=utf-8'
+    }},
     data:body ,
     messageSettings : {}
   })

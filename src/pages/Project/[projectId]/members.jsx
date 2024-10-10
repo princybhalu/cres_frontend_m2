@@ -34,13 +34,18 @@ const UserList = () => {
             setRowData(updatedData);
         };
 
+        if(PLATFORM_USERS.OFFICER === user.role){
+            return (
+                <button
+                    onClick={onClick}
+                    className="p-2 hover:bg-gray-100 rounded-full"
+                >
+                    <DeleteIcon className="h-5 w-5 text-gray-600" />
+                </button>
+            );
+        }
         return (
-            <button
-                onClick={onClick}
-                className="p-2 hover:bg-gray-100 rounded-full"
-            >
-                <DeleteIcon className="h-5 w-5 text-gray-600" />
-            </button>
+            <></>
         );
     };
 
@@ -189,7 +194,6 @@ const UserList = () => {
 
             {/* Search and Add button */}
             <div className="flex justify-end mb-6">
-                <button onClick={() => opne}> Select Date Range </button>
                 <div className="flex border border-gray-300 mx-2 px-1 ">
                     <SearchIcon style={`my-auto `} />
                     <input

@@ -5,6 +5,7 @@ import * as yup from 'yup';
 import { useNavigate, useParams } from "react-router-dom";
 import {addProgessOfProject} from "../../services/api/project";
 import { useSelector } from "react-redux";
+import { useCookies } from 'react-cookie'
 
 // Validation schema
 const schema = yup.object().shape({
@@ -12,10 +13,10 @@ const schema = yup.object().shape({
   description: yup.string().required('Description is required'),
   image: yup
     .mixed()
-    .required('At least one image is required')
-    .test('fileCount', 'You can upload up to 5 images', (value) => {
-      return value && value.length > 0 && value.length <= 5;
-    })
+    // .required('At least one image is required')
+    // .test('fileCount', 'You can upload up to 5 images', (value) => {
+    //   return value && value.length > 0 && value.length <= 5;
+    // })
     // .test('fileSize', 'Each file must be less than 10MB', (value) => {
     //   // return value && value.every(file => file.size <= 10 * 1024 * 1024); // 10MB size limit
     // })
@@ -30,6 +31,9 @@ const AddProgressForm = ({onClose}) => {
   const [files, setFiles] = useState([]);
   const user1 = useSelector((state) => state.user.user);
   const user = {...user1};
+
+  const [cookies, setCookie, removeCookie] = useCookies(['user_id']);
+  console.log(cookies.user_id);
 
   const {
     register,
@@ -61,10 +65,9 @@ const AddProgressForm = ({onClose}) => {
     let requestBody = {
       title: data.title,
       description: data.description,
-      due_date: data.dueDate,
       media: [],
       type: "workpermit",
-      user_id: user.id
+      user_id: cookies.user_id
     };
 
     let urls = [];
@@ -175,7 +178,7 @@ const AddProgressForm = ({onClose}) => {
         <div className="mt-4 text-right">
           <button
             type="button"
-            onClick={() => navigate("/")}
+            onClick={() => onClose()}
             className='border rounded border-gray-800 py-2 px-4 mr-2'
           >
             Cancel

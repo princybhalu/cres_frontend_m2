@@ -1,7 +1,7 @@
 import React from "react";
 import ProfileIcon from "../../assets/icons/profile-icon";
 import MenuIcon from "../../assets/icons/menu-icon";
-import logo from "../../assets/images/logo.jpg";
+import logo from "../../assets/images/logo.png";
 import { useSelector } from "react-redux";
 
 const Navbar = ({

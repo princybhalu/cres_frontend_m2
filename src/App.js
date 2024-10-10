@@ -7,11 +7,13 @@ import ProtectedRoute from "./routes/protectRoute";
 import { PersistGate } from 'redux-persist/integration/react';
 import Layout from "./layouts/layout"; 
 import NotificationWrapper from "./components/notifiction/Notification";
+import  ErrorBoundary from "./components/error-boundry/error-boundry";
 
 const App = () => {
   return (
     <>
-      <Provider store={store}>
+    <ErrorBoundary>
+    <Provider store={store}>
       <PersistGate loading={<div>Loading...</div>} persistor={persistor}>
         <Router>
           <Routes>
@@ -46,6 +48,8 @@ const App = () => {
         </PersistGate>
       </Provider>
       <NotificationWrapper />
+    </ErrorBoundary>
+      
     </>
   );
 };

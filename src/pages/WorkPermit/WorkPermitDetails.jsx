@@ -7,7 +7,7 @@ import { getOneProgessDetails } from "../../services/api/project";
 import Loading from "../../components/shared/Loading";
 import { PLATFORM_USERS } from "../../utils/enums";
 import { chnageStatusOfProgress, addCommentsOfProgress } from "../../services/api/progress";
-import {getUsersListByIds} from "../../services/api/user";
+import { getUsersListByIds } from "../../services/api/user";
 import { useCookies } from 'react-cookie'
 
 Modal.setAppElement('#root'); // Modal setup
@@ -55,17 +55,17 @@ const ProgressDetails = () => {
                 comment: newComment,
                 progress_id: progressId,
             };
-            let {data} = await addCommentsOfProgress(reqbody, projectId);
-            let userids = data.comments?.map(({user_id}) => user_id);
-            let {data: usersData} = await  getUsersListByIds({
+            let { data } = await addCommentsOfProgress(reqbody, projectId);
+            let userids = data.comments?.map(({ user_id }) => user_id);
+            let { data: usersData } = await getUsersListByIds({
                 ids: userids
             });
-            console.log({usersData});
+            console.log({ usersData });
             console.log(usersData[0].firstname);
-            
-            let newComments = data.comments.map((com , index )=> {
-                let name = usersData.find(({id}) => id === com.user_id)?.firstname;
-                return {...com , userName : name}
+
+            let newComments = data.comments.map((com, index) => {
+                let name = usersData.find(({ id }) => id === com.user_id)?.firstname;
+                return { ...com, userName: name }
             });
             setComments([...newComments]); // Append new comment
             setNewComment('');
@@ -76,7 +76,7 @@ const ProgressDetails = () => {
 
     // Open image in modal
     const openImageModal = (imageUrl) => {
-        setSelectedImage(imageUrl[0] === '{' ? imageUrl.slice(1, imageUrl.length-1) : imageUrl);
+        setSelectedImage(imageUrl[0] === '{' ? imageUrl.slice(1, imageUrl.length - 1) : imageUrl);
     };
 
     // Close image modal
@@ -92,20 +92,20 @@ const ProgressDetails = () => {
             setProgres(data);
             setStatus(data.status);
 
-            let userids = data.comments?.map(({user_id}) => user_id);
-            let usersData ;
-            if(userids){
-                let dataOfUser = await  getUsersListByIds({
+            let userids = data.comments?.map(({ user_id }) => user_id);
+            let usersData;
+            if (userids.length > 0) {
+                let dataOfUser = await getUsersListByIds({
                     ids: userids
                 });
                 usersData = dataOfUser.data;
 
-                console.log({usersData});
+                console.log({ usersData });
                 console.log(usersData[0].firstname);
-                
-                let newComments = data.comments.map((com , index )=> {
-                    let name = usersData.find(({id}) => id === com.user_id)?.firstname;
-                    return {...com , userName : name}
+
+                let newComments = data.comments.map((com, index) => {
+                    let name = usersData.find(({ id }) => id === com.user_id)?.firstname;
+                    return { ...com, userName: name }
                 });
                 setComments(newComments ?? []);
             }
@@ -126,14 +126,14 @@ const ProgressDetails = () => {
     };
 
     const handleSelectedImage = () => {
-        try{
-     //TODO : ADD IMAGE
+        try {
+            //TODO : ADD IMAGE
 
 
-        }catch(err){
+        } catch (err) {
             console.log("errr");
-            
-        }   
+
+        }
     }
 
 
@@ -179,9 +179,9 @@ const ProgressDetails = () => {
                                             onChange={handleStatusChange}
                                             className="p-2 border border-gray-300 rounded"
                                         >
-                                            <option value="Approved">Approved</option>
-                                            <option value="Pending">Pending</option>
-                                            <option value="Rejected">Rejected</option>
+                                            <option value="approved">Approved</option>
+                                            <option value="pending">Pending</option>
+                                            <option value="rejected">Rejected</option>
                                         </select>
                                         <button
                                             onClick={handleStatusSubmit}
@@ -236,13 +236,15 @@ const ProgressDetails = () => {
                             {images.map((image, index) => (
                                 <div key={index} className="relative">
                                     <img
-                                        src={image[0] === '{' ? image.slice(1, image.length-1) : image}
+                                        src={image[0] === '{' ? image.slice(1, image.length - 1) : image}
                                         alt={`Progress ${index}`}
                                         onClick={() => openImageModal(image)}
                                         className="w-full h-32 object-cover rounded cursor-pointer"
                                     />
                                 </div>
                             ))}
+                            {images.length === 0 && <><div className="relative"> Not Any Image Found
+                            </div></>}
                         </div>
                     </div>
 
@@ -261,6 +263,7 @@ const ProgressDetails = () => {
                                         </div>
                                     </div>
                                     <div className="p-4 bg-gray-100 rounded-lg max-w-xs">
+                                        <div className="text-xs text-gray-500 mt-1">{comment.userName}</div>
                                         <p className="text-sm text-gray-800">{comment.comment}</p>
                                         <div className="text-xs text-gray-500 mt-1">{new Date(comment.time).toLocaleTimeString()}</div>
                                     </div>

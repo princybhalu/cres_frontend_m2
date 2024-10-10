@@ -9,6 +9,7 @@ import ResourceList from "../pages/Project/[projectId]/Resource";
 import WorkPermitList from "../pages/Project/[projectId]/WorkPermit";
 import ProgressDetails from "../pages/Progress/ProgressDetails";
 import ResourceDetails from "../pages/Resource/ResourceDetails";
+import WorkPermitDetails from "../pages/WorkPermit/WorkPermitDetails";
 import Register from "../pages/Register";
 
 export const routes = [
@@ -24,7 +25,7 @@ export const routes = [
 
   { path: '/project/:projectId/progress/:progressId', component: ProgressDetails, protected: true, layout: true },
   { path: '/project/:projectId/resource/:progressId', component: ResourceDetails, protected: true, layout: true },
-  { path: '/project/:projectId/workpermit/:progressId', component: ProgressDetails, protected: true, layout: true },
+  { path: '/project/:projectId/workpermit/:progressId', component: WorkPermitDetails, protected: true, layout: true },
 
   { path: '/register/:token', component: Register , protected: false, layout: false },
   { path: '*', component: NotFound, protected: false, layout: false },

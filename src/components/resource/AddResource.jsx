@@ -5,6 +5,7 @@ import * as yup from 'yup';
 import { useNavigate, useParams } from "react-router-dom";
 import {addProgessOfProject} from "../../services/api/project";
 import { useSelector } from "react-redux";
+import { useCookies } from 'react-cookie'
 
 // Validation schema
 const schema = yup.object().shape({
@@ -31,6 +32,10 @@ const AddResourceForm = ({onClose}) => {
   const [files, setFiles] = useState([]);
   const user1 = useSelector((state) => state.user.user);
   const user = {...user1};
+
+  const [cookies, setCookie, removeCookie] = useCookies(['user_id']);
+  console.log(cookies.user_id);
+  
 
   const {
     register,
@@ -65,7 +70,7 @@ const AddResourceForm = ({onClose}) => {
       resources_type: data.resouces_type,
       media: [],
       type: "resource",
-      user_id: user.id
+      user_id: cookies.user_id
     };
 
     let urls = [];
@@ -188,7 +193,7 @@ const AddResourceForm = ({onClose}) => {
         <div className="mt-4 text-right">
           <button
             type="button"
-            onClick={() => navigate("/")}
+            onClick={() => onClose()}
             className='border rounded border-gray-800 py-2 px-4 mr-2'
           >
             Cancel

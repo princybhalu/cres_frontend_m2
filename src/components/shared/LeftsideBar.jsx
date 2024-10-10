@@ -3,10 +3,7 @@ import CloseIcon from "../../assets/icons/close-icon";
 import ProfileIcon from "../../assets/icons/profile-icon";
 import { PLATFORM_USERS } from "../../utils/enums";
 import { useSelector } from "react-redux";
-import ResourceIcon from '../../assets/icons/Resource-icon';
-import WorkPermitIcon from "../../assets/icons/WorkPermit-icon";
-import ProgrssIcon from "../../assets/icons/Progress-icon";
-import MembersIcon from '../../assets/icons/Members-icon';
+import logo from "../../assets/images/logo.png"
 
 // eslint-disable-next-line react/prop-types
 const LeftsideBar = ({
@@ -83,7 +80,7 @@ const LeftsideBar = ({
             </svg>),
             screen: "resource",
             path: `/project/${project.id}/Resource`,
-            allowedRoles: [PLATFORM_USERS.OFFICER, PLATFORM_USERS.ARCHITECT, PLATFORM_USERS.CONTRACTOR, PLATFORM_USERS.DEALER, PLATFORM_USERS.WORKER],
+            allowedRoles: [PLATFORM_USERS.OFFICER, PLATFORM_USERS.ARCHITECT, PLATFORM_USERS.CONTRACTOR, PLATFORM_USERS.DEALER],
         },
     ];
 
@@ -176,7 +173,7 @@ const LeftsideBar = ({
                         <div className="flex justify-between items-center mb-4">
                             <h2 className="text-xl font-bold">
                                 <img
-                                    src="logo.jpg"
+                                    src={logo}
                                     alt="Logo"
                                     className="w-8 h-8 rounded-full"
                                 />

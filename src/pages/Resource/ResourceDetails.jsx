@@ -181,9 +181,9 @@ const ProgressDetails = () => {
                                             onChange={handleStatusChange}
                                             className="p-2 border border-gray-300 rounded"
                                         >
-                                            <option value="Approved">Approved</option>
-                                            <option value="Pending">Pending</option>
-                                            <option value="Rejected">Rejected</option>
+                                            <option value="approved">Approved</option>
+                                            <option value="pending">Pending</option>
+                                            <option value="rejected">Rejected</option>
                                         </select>
                                         <button
                                             onClick={handleStatusSubmit}

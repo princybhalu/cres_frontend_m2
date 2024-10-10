@@ -20,7 +20,6 @@ const headers = {
   Accept: 'application/json',
   'Content-Type': 'application/json; charset=utf-8',
   'Access-Control-Allow-Origin': '*',
-  'referrerPolicy': "unsafe-url"
 };
 
 const defaultSettings = {
@@ -110,7 +109,10 @@ const Http = async (apiDataProps) => {
 
   const fetchOptions = {
     method,
-    headers: { ...headers, ...apiConfig.headers },
+    headers: { 
+      ...apiConfig.headers, 
+      // 'Content-Type': method !== 'get' ? 'application/json' : 'application/json', // Ensure it's JSON except for GET
+    },
     body: method !== 'get' ? JSON.stringify(apiData) : undefined,
     ...apiConfig,
     credentials: 'include'

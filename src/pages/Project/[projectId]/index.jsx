@@ -18,7 +18,7 @@ const CARDS_CONFIG = [
         title: 'Resource',
         color: 'green',
         icon: <ResourceIcon />,
-        allowedRoles: [PLATFORM_USERS.OFFICER, PLATFORM_USERS.ARCHITECT, PLATFORM_USERS.CONTRACTOR, PLATFORM_USERS.DEALER, PLATFORM_USERS.WORKER]
+        allowedRoles: [PLATFORM_USERS.OFFICER, PLATFORM_USERS.ARCHITECT, PLATFORM_USERS.CONTRACTOR, PLATFORM_USERS.DEALER]
     },
     {
         id: 'progress',
